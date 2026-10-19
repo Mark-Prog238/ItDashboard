@@ -52,7 +52,7 @@ export function NavUser({
             }
           >
             <Avatar>
-              <AvatarImage src={session.user.image} alt={session.user.name} />
+              <AvatarImage src={session.user.image ?? undefined} alt={session.user.name} />
               <AvatarFallback>BP</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
