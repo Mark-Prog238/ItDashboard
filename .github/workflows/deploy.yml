@@ -10,12 +10,8 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Update repo
+      - name: Deploy
         run: |
           cd /opt/it-dashboard
           git pull
-
-      - name: Rebuild app
-        run: |
-          cd /opt/it-dashboard
           docker compose up -d --build
