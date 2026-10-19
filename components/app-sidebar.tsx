@@ -35,7 +35,7 @@ const data = {
       items: [
         {
           title: "Devices",
-          url: "/mobileposdb",
+          url: "/dashboard/mobilepos",
          onClick: () => {console.log("clicked")
          }
         },
