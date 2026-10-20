@@ -35,13 +35,13 @@ const data = {
       items: [
         {
           title: "Devices",
-          url: "/dashboard/mobilepos",
+          url: "/dashboard/mobilepos/devices",
          onClick: () => {console.log("clicked")
          }
         },
         {
           title: "Users",
-          url: "#",
+          url: "/dashboard/mobilepos/users",
         },
         {
           title: "Settings",
