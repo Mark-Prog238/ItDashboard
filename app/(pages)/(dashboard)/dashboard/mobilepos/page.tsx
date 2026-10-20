@@ -1,10 +1,12 @@
 import { valkireDbConnect } from "@/lib/VALKIRE/connector";
 import { Card } from "@/components/ui/card";
 import DeviceTable from "@/components/pos-devices/table";
-import { connection } from "next/server"; // 1. Import connection
+import { connection } from "next/server";
+
+export const instant = false; // <-- ADD THIS BACK
 
 export default async function Page() {
-    await connection(); // 2. Await connection to opt into dynamic rendering safely
+    await connection();
 
     const pool = await valkireDbConnect;
     const result = await pool.request().query('SELECT * FROM ValkirePosUnit');

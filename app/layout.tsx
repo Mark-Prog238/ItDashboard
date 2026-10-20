@@ -25,17 +25,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-
-        <html
-        lang="en"
-        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      <html
+          lang="en"
+          className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+          suppressHydrationWarning /* <-- ADD THIS PROP HERE */
       >
-        <body className="min-h-full flex flex-col">
-          <ThemeProvider attribute="class" defaultTheme="system">
-            {children}
-          </ThemeProvider>
-        </body>
+      <body className="min-h-full flex flex-col">
+      <ThemeProvider attribute="class" defaultTheme="system">
+        {children}
+      </ThemeProvider>
+      </body>
       </html>
-
   );
 }
