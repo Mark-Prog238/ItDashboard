@@ -1,10 +1,12 @@
-
-//import { Pool } from "pg"; phg is for psotgres
-
 import sql from "mssql";
 
-// Initialize the pool with your SQL Server connection string
-export const valkirePool = new sql.ConnectionPool(process.env.VALKIRE_DATABASE_URL as string);
+// 1. Provide a dummy URL so it doesn't crash on 'undefined' during the Docker build
+const dbUrl = process.env.VALKIRE_DATABASE_URL || "mssql://dummy:dummy@localhost:1433/dummy";
 
-// Export a promise that resolves when the connection is established
-export const valkireDbConnect = valkirePool.connect();
+// 2. Initialize the pool safely
+export const valkirePool = new sql.ConnectionPool(dbUrl);
+
+// 3. Safely export the connection promise
+export const valkireDbConnect = process.env.VALKIRE_DATABASE_URL
+    ? valkirePool.connect()
+    : Promise.resolve(valkirePool);
