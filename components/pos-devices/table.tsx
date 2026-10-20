@@ -50,14 +50,14 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
     // 7. Render your table markup from the table instance APIs.
     return (
         <div className="p-4">
-                <div className="relative w-full max-w-sm mb-4">
-                    <Search className="ml-1 pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <DebouncedInput
-                        value={table.state.globalFilter ?? ''}
-                        onChange={(value) => table.setGlobalFilter(String(value))}
-                        placeholder="Search all columns..."
-                        className="px-6"
-                    />
+            <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input bg-transparent px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
+                <Search className="size-4 shrink-0 text-muted-foreground" />
+                <DebouncedInput
+                    value={table.state.globalFilter ?? ''}
+                    onChange={(value) => table.setGlobalFilter(String(value))}
+                    placeholder="Search all columns..."
+                    className="h-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                />
             </div>
 
             <div className="rounded-md border">
@@ -141,7 +141,7 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                                 />
                             </SelectTrigger>
                             <SelectContent side="top">
-                                {[10, 20, 30, 40, 50].map((pageSize) => (
+                                {[ 20, 30, 40, 50].map((pageSize) => (
                                     <SelectItem key={pageSize} value={`${pageSize}`}>
                                         {pageSize}
                                     </SelectItem>
@@ -205,11 +205,13 @@ function DebouncedInput({
                             value: initialValue,
                             onChange,
                             debounce = 300,
+                            className, // 1. Explicitly extract className here
                             ...props
                         }: {
     value: string | number
     onChange: (value: string | number) => void
     debounce?: number
+    className?: string // 2. Add it to the types
 } & Omit<React.ComponentProps<typeof Input>, 'onChange'>) {
     const [value, setValue] = React.useState(initialValue)
 
@@ -223,6 +225,7 @@ function DebouncedInput({
         <Input
             {...props}
             value={value}
+            className={className} // 3. Pass it explicitly to Shadcn Input
             onChange={(e) => {
                 setValue(e.target.value)
                 debouncedOnChange(e.target.value)

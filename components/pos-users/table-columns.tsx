@@ -10,7 +10,7 @@ export type Users = {
 export const columnHelper = createColumnHelper<typeof features, Users>()
 
 // 1. Remove columnHelper.columns() and just use a standard array
-export const columns: any = [
+export const columns: any[] = [
     columnHelper.accessor('ValkirePosUserID', {
         header: 'USER ID',
     }),

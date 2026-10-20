@@ -1,5 +1,5 @@
 "use client"
-// TODO add BP logo Link user data in user menu add toggle theme button
+// TODO add BP logo menu add toggle theme button
 import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
@@ -15,8 +15,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { TerminalSquareIcon, BotIcon, BookOpenIcon, Settings2Icon, LifeBuoyIcon, SendIcon, FrameIcon, PieChartIcon, MapIcon, TerminalIcon } from "lucide-react"
-
+import {
+  FrameIcon,
+  PieChartIcon,
+  MapIcon,
+  TerminalIcon,
+  Terminal,
+  Settings,
+  Users,
+  Boxes,
+  Workflow,
+  Server,
+  Tablet
+} from "lucide-react"
 const data = {
   user: {
     name: "shadcn",
@@ -25,134 +36,86 @@ const data = {
   },
   navMain: [
     {
-      title: "MobilePOS",
+      title: "Mobile POS",
       url: "#",
       icon: (
-        <TerminalSquareIcon
-        />
+          <Tablet/>
       ),
-      isActive: true,
       items: [
         {
-          title: "Devices",
+          title: "POS Units",
+          icon: <Users/>,
           url: "/dashboard/mobilepos/devices",
-         onClick: () => {console.log("clicked")
-         }
+          active: true,
         },
         {
-          title: "Users",
+          title: "Operators",
+          icon: <Terminal/>,
           url: "/dashboard/mobilepos/users",
         },
         {
           title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-  /*  {
-      title: "Models",
-      url: "#",
-      icon: (
-        <BotIcon
-        />
-      ),
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          icon: <Settings/>,
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "OTHER APPS",
       url: "#",
       icon: (
-        <BookOpenIcon
-        />
+          <Boxes
+          />
       ),
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "N8N Workflows",
+          url: "http://10.31.1.80:5678/home/workflows",
+          icon: (
+              <Workflow
+              />
+          ),
         },
         {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          title: "Zabbix monitoring",
+          url: "https://zabbix.butanplin.si/",
+          icon: (
+              <Server
+              />
+          ),
         },
       ],
     },
-    {
-      title: "Settings",
-      url: "#",
-      icon: (
-        <Settings2Icon
-        />
-      ),
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },*/
   ],
   navSecondary: [
     {
-      title: "Support",
-      url: "#",
+      title: "N8N Workflows",
+      url: "http://10.31.1.80:5678/home/workflows",
       icon: (
-        <LifeBuoyIcon
-        />
+          <FrameIcon
+          />
       ),
     },
     {
-      title: "Feedback",
+      title: "Zabbix monitoring",
       url: "#",
       icon: (
-        <SendIcon
-        />
+          <PieChartIcon
+          />
       ),
     },
   ],
-  projects: [
+  links: [
     {
-      name: "Design Engineering",
-      url: "#",
+      name: "N8N Automation",
+      url: "http://10.31.1.80:5678/",
       icon: (
         <FrameIcon
         />
       ),
     },
     {
-      name: "Sales & Marketing",
+      name: "Zabbix",
       url: "#",
       icon: (
         <PieChartIcon
@@ -161,7 +124,7 @@ const data = {
     },
     {
       name: "Travel",
-      url: "#",
+      url: "https://zabbix.butanplin.si/",
       icon: (
         <MapIcon
         />
@@ -192,8 +155,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-{/*        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />*/}
+       {/* <NavProjects projects={data.links} />*/}
+          {/*  <NavSecondary items={data.navSecondary} className="mt-auto" />*/}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

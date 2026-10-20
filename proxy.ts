@@ -1,13 +1,18 @@
+import { betterFetch } from "@better-fetch/fetch";
+import type { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth/cookies";
+
+type Session = typeof auth.$Infer.Session;
 
 export async function proxy(request: NextRequest) {
-    const sessionCookie = getSessionCookie(request);
+    const { data: session } = await betterFetch<Session>("/api/auth/get-session", {
+        baseURL: request.nextUrl.origin,
+        headers: {
+            cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
+        },
+    });
 
-    // THIS IS NOT SECURE!
-    // This is the recommended approach to optimistically redirect users
-    // We recommend handling auth checks in each page/route
-    if (!sessionCookie) {
+    if (!session) {
         return NextResponse.redirect(new URL("/signin", request.url));
     }
 
@@ -15,5 +20,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard"], // Specify the routes the middleware applies to
+    matcher: ["/dashboard/:path*"], // Apply middleware to specific routes
 };
