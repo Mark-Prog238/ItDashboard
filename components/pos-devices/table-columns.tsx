@@ -1,6 +1,5 @@
 import {createColumnHelper} from "@tanstack/react-table";
-import * as React from "react";
-
+import {features} from "@/components/pos-devices/table-features";
 export type Devices = {
     ValkirePosUnitID: number
     Vehicle: string
