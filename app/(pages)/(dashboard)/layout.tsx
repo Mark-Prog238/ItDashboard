@@ -2,6 +2,7 @@
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import {SiteHeader} from "@/components/site-header";
+
 export default async function Layout({ children }: { children: React.ReactNode }) {
     return (
         <div className="[--header-height:calc(--spacing(14))]">
