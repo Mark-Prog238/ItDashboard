@@ -41,7 +41,7 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
         {
             debugTable: false,
             features,
-            columns,
+            columns: columns as any,
             data,
             globalFilterFn: 'includesString',
         },

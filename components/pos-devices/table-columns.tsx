@@ -1,7 +1,7 @@
 import {createColumnHelper} from "@tanstack/react-table";
 import {features} from "@/components/pos-devices/table-features";
 export type Devices = {
-    ValkirePosUnitID: number
+    ValkirePosUnitID: string
     Vehicle: string
     PosCurrentIPV4: string
     FiscBusinessPremiseID: string
@@ -10,18 +10,16 @@ export type Devices = {
 export const columnHelper = createColumnHelper<typeof features, Devices>()
 
 // 1. Remove columnHelper.columns() and just use a standard array
-export const columns = [
+export const columns: any[] = [
     columnHelper.accessor('ValkirePosUnitID', {
         header: 'ValkirePosUnitID',
     }),
 
-    columnHelper.accessor(row => row.Vehicle, {
-        id: 'Vehicle',
+    columnHelper.accessor('Vehicle', {
         header: 'Vehicle',
     }),
 
-    columnHelper.accessor(row => String(row.PosCurrentIPV4), {
-        id: 'PosCurrentIPV4',
+    columnHelper.accessor('PosCurrentIPV4', {
         header: 'PosCurrentIPV4',
     }),
 
