@@ -141,7 +141,7 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                                 />
                             </SelectTrigger>
                             <SelectContent side="top">
-                                {[ 20, 30, 40, 50].map((pageSize) => (
+                                {[ 10, 20, 30, 40, 50].map((pageSize) => (
                                     <SelectItem key={pageSize} value={`${pageSize}`}>
                                         {pageSize}
                                     </SelectItem>

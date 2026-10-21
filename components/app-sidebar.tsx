@@ -25,8 +25,10 @@ import {
   Users,
   Boxes,
   Workflow,
-  Server,
-  Tablet
+  Shield,
+  Tablet,
+  Laptop,
+  Activity
 } from "lucide-react"
 const data = {
   user: {
@@ -61,7 +63,7 @@ const data = {
       ],
     },
     {
-      title: "OTHER APPS",
+      title: "IT Tools",
       url: "#",
       icon: (
           <Boxes
@@ -69,18 +71,32 @@ const data = {
       ),
       items: [
         {
-          title: "N8N Workflows",
-          url: "http://10.31.1.80:5678/home/workflows",
+          title: "pfSense Firewall",
+          url: "https://10.31.230.4/",
           icon: (
-              <Workflow
+              <Shield/>
+          ),
+        },
+        {
+          title: "Endpoint Central",
+          url: "https://siljswdeploy:8383/",
+          icon: (
+              <Laptop/>
+          ),
+        },
+        {
+          title: "Zabbix Monitoring",
+          url: "https://zabbix.butanplin.si/",
+          icon: (
+              <Activity
               />
           ),
         },
         {
-          title: "Zabbix monitoring",
-          url: "https://zabbix.butanplin.si/",
+          title: "N8N Workflows",
+          url: "http://10.31.1.80:5678/home/workflows",
           icon: (
-              <Server
+              <Workflow
               />
           ),
         },
@@ -146,6 +162,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <TerminalIcon className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
+                {/*TODO add logo instead of TEXT*/}
                 <span className="truncate font-medium">Butan Plin</span>
                 <span className="truncate text-xs">Dashboard</span>
               </div>

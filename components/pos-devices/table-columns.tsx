@@ -6,6 +6,7 @@ export type Devices = {
     PosCurrentIPV4: string
     FiscBusinessPremiseID: string
     FiscElectronicDeviceID: string
+    PosConnectStartLast: string
 }
 export const columnHelper = createColumnHelper<typeof features, Devices>()
 
@@ -30,4 +31,7 @@ export const columns: any[] = [
     columnHelper.accessor('FiscElectronicDeviceID', {
         header: 'FiscElectronicDeviceID',
     }),
+    columnHelper.accessor('PosConnectStartLast', {
+        header: 'Last connection'
+    })
 ]

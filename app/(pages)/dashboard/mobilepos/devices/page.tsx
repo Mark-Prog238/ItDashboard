@@ -1,41 +1,63 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
-import { valkireDbConnect } from "@/lib/VALKIRE/connector";
-import { Card } from "@/components/ui/card";
+import { Card,CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import DeviceTable from "@/components/pos-devices/table";
+import {AllDevicesData, IpFilteredDevices} from "@/lib/VALKIRE/functions";
+import {Smartphone,CheckCircle2,AlertCircle} from 'lucide-react'
 
-// 1. Move the database query into its own async component
-async function TableData() {
-    // CRITICAL: Since TableData is wrapped in <Suspense> below, awaiting connection() here
-    // safely tells Next.js to stop during `npm run build` and only run the query at runtime.
-    await connection();
 
-    const pool = await valkireDbConnect;
-    const result = await pool.request().query('SELECT * FROM ValkirePosUnit');
-    const data = result.recordset;
-
-    return <DeviceTable data={data} />;
-}
-
-// 2. The main Page component stays synchronous
-export default function Page() {
-    return (
-        <div className="flex w-full min-h-screen">
-            <div className="w-full flex flex-col">
-
-                {/* QUICK DATA CARDS (Prerendered into the static shell at build time) */}
-                <div className="w-full flex flex-row gap-4 p-4">
-                    <Card className="flex-1 flex items-center justify-center py-6">card 1</Card>
-                    <Card className="flex-1 flex items-center justify-center py-6">card 2</Card>
-                    <Card className="flex-1 flex items-center justify-center py-6">card 3</Card>
+export default async function Page() {
+    const ipDevices = await IpFilteredDevices()
+    const allDevices = await AllDevicesData()
+    const alldevicesCount = allDevices ? allDevices.length : 0;
+    const onlineDevicesCount = ipDevices ? ipDevices.length : 0
+    const fiscalizationDevices = alldevicesCount && onlineDevicesCount ? alldevicesCount - onlineDevicesCount : 0
+    return(
+        <div className="flex-1 w-full p-6 space-y-6">
+                <div className="flex w-full flex-row gap-4">
+                    <Card className="flex-1 min-h-36 flex flex-col justify-between">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Total Units
+                            </CardTitle>
+                            <Smartphone className="size-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{alldevicesCount}</div>
+                            <p className="text-xs text-muted-foreground mt-1">Configured MobilePOS terminals</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="flex-1 min-h-36 flex flex-col justify-between">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Online Devices
+                            </CardTitle>
+                            <CheckCircle2 className="size-4 text-emerald-500" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{onlineDevicesCount}</div>
+                            <p className="text-xs text-muted-foreground mt-1">Active IP heartbeat</p>
+                        </CardContent>
+                    </Card>
+                    <Card className="flex-1 min-h-36 flex flex-col justify-between">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Fiscalization Offline
+                            </CardTitle>
+                            <AlertCircle className="size-4 text-amber-500" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{fiscalizationDevices}</div>
+                            <p className="text-xs text-muted-foreground mt-1">Pending sync or unreachable</p>
+                        </CardContent>
+                    </Card>
                 </div>
-
-                {/* DATA TABLE (Streams dynamically at request time) */}
-                <Suspense fallback={<div className="p-4 text-sm text-gray-500">Loading devices...</div>}>
-                    <TableData />
-                </Suspense>
-
+                {/* DATA TABLE */}
+                <div className="space-y-4">
+                    <Suspense fallback={<div className="p-4 text-sm text-gray-500">Loading devices...</div>}>
+                          <DeviceTable data={allDevices}/>
+                    </Suspense>
+                </div>
             </div>
-        </div>
     );
 }
