@@ -1,15 +1,9 @@
-import { betterFetch } from "@better-fetch/fetch";
-import type { auth } from "@/auth";
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-type Session = typeof auth.$Infer.Session;
-
 export async function proxy(request: NextRequest) {
-    const { data: session } = await betterFetch<Session>("/api/auth/get-session", {
-        baseURL: request.nextUrl.origin,
-        headers: {
-            cookie: request.headers.get("cookie") || "", // Forward the cookies from the request
-        },
+    const session = await auth.api.getSession({
+        headers: request.headers,
     });
 
     if (!session) {
@@ -20,5 +14,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*"], // Apply middleware to specific routes
+    matcher: ["/dashboard/:path*"],
 };

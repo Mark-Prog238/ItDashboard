@@ -1,11 +1,15 @@
-import sql from "mssql";
+/*
+import sql from 'mssql';
 
-const dbUrl =
-    process.env.VALKIRE_DATABASE_URL ||
-    "Server=localhost,1433;Database=dummy;User Id=dummy;Password=dummy;Encrypt=false;TrustServerCertificate=true";
+const url = process.env.VALKIRE_DATABASE_URL
 
-export const valkirePool = new sql.ConnectionPool(dbUrl);
-
-export const valkireDbConnect = process.env.VALKIRE_DATABASE_URL
-    ? valkirePool.connect()
-    : Promise.resolve(valkirePool);
+export const valkireDbConnect = async () => {
+    try {
+        if (url) {
+            const pool = await sql.connect(url);
+            return pool;
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}*/
