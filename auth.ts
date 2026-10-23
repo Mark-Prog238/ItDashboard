@@ -82,6 +82,10 @@ export const auth = betterAuth({
     trustedOrigins: [
         "http://localhost:3000",
         "http://10.31.1.80:3000",
+        "http://10.31.1.80",
+        "http://it-dashboard",
+        "http://it-dashboard.butanplin.si",
+        "http://it-dashboard.shvenergy.corp",
         ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
     ],
     session: {
