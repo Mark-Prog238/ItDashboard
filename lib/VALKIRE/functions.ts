@@ -1,4 +1,4 @@
-import { getDbPool } from "@/lib/db";
+import { getDbPool } from "@/lib/mssql_db";
 import { connection } from "next/server";
 import type { Devices } from "@/components/pos-devices/table-columns";
 import {Users} from "@/components/pos-users/table-columns";

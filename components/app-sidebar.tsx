@@ -39,6 +39,7 @@ const data = {
   navMain: [
     {
       title: "Mobile POS",
+      active: true,
       url: "#",
       icon: (
           <Tablet/>

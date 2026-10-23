@@ -1,12 +1,15 @@
-import Image from "next/image";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-      <>
-          <a href="/signin">SIGN IN</a>
-          <a href="/signup">SIGN UP</a>
-          <a href="/dashboard">DASHBOARD</a>
-      </>
+export default async function Home() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  );
+  if (session) {
+    redirect("/dashboard/mobilepos/devices");
+  } else {
+    redirect("/signin");
+  }
 }

@@ -1,77 +1,114 @@
-"use client"
-import { cn } from "cn"
-import { auth_signIn} from "@/lib/auth_functions";
-import { Button } from "@/components/ui/button"
+"use client";
+
+import { useState } from "react";
+import { cn } from "cn";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const formAction = async (formData: FormData) => {
-    await auth_signIn({
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-    });
-  }
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const username = (formData.get("username") as string)?.trim();
+    const password = formData.get("password") as string;
+
+    try {
+      const response = await fetch("/api/auth/sign-in/ldap", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Napačno uporabniško ime ali geslo.");
+        setLoading(false);
+        return;
+      }
+
+      // Uspešna prijava - seja je varno shranjena v HTTP-only piškotku
+      window.location.href = "/dashboard/mobilepos/devices";
+    } catch (error) {
+      setError("Napaka pri povezavi s strežnikom.");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Prijava v IT Dashboard</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Prijavite se s svojim domenskim (Active Directory) računom
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction}>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
+              {error && (
+                <div className="p-3 text-sm font-medium rounded-md bg-destructive/15 text-destructive border border-destructive/20 text-center">
+                  {error}
+                </div>
+              )}
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="username">Domensko uporabniško ime / Email</FieldLabel>
                 <Input
-                  id="email"
-                  type="email"
-                  name="email"
-                  placeholder="m@example.com"
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="mark.salamon ali mark.salamon@butanplin.si"
+                  autoComplete="username"
                   required
+                  disabled={loading}
                 />
               </Field>
               <Field>
                 <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
+                  <FieldLabel htmlFor="password">Domensko geslo</FieldLabel>
                 </div>
-                <Input id="password" name="password" type="password" required />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  disabled={loading}
+                />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
-
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="/signup">Sign up</a>
-                </FieldDescription>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? "Preverjanje z Active Directory..." : "Prijava"}
+                </Button>
               </Field>
             </FieldGroup>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

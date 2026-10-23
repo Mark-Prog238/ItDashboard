@@ -1,19 +1,16 @@
 import { Suspense } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import {AllUsersData, onlineDevicesCount, AllUsersCount} from "@/lib/VALKIRE/functions";
+import {AllUsersData, AllUsersCount} from "@/lib/VALKIRE/functions";
 import { Smartphone, CheckCircle2, AlertCircle } from "lucide-react";
 import UsersTable from "@/components/pos-users/table";
 
-// 1. Child async component performs the data fetching inside the <Suspense> boundary
+
 async function UsersDashboard() {
-    const [allUsers, all, online] = await Promise.all([
+    const [allUsers, all] = await Promise.all([
         AllUsersData(),
         AllUsersCount(),
-        onlineDevicesCount(),
     ]);
-
-    const fiscalizationDevices = Math.max(0, all - online);
-
+ //   const fiscalizationDevices = Math.max(0, all - online);
     return (
         <>
             <div className="flex w-full flex-row gap-4">
@@ -81,3 +78,7 @@ export default function Page() {
         </div>
     );
 }
+//todo add a button to add new user or vehicle and edit for users or vehicle
+//todo add ping button
+//todo add role based perms and logs
+//todo create a seperate db user in valkire
