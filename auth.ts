@@ -78,14 +78,14 @@ export const ldapPlugin = (): BetterAuthPlugin => ({
 
 export const auth = betterAuth({
     database: dashboardDB,
-    secret: process.env.BETTER_AUTH_SECRET || "3cKPnnBhClSvbh0bhuqQVCXc7ajk78NV",
+    secret: process.env.BETTER_AUTH_SECRET || "",
     trustedOrigins: [
+        // HTTP
         "http://localhost:3000",
-        "http://10.31.1.80:3000",
+        "https://dashboard.butanplin.si",
+        "http://dashboard.butanplin.si",
         "http://10.31.1.80",
-        "http://it-dashboard",
-        "http://it-dashboard.butanplin.si",
-        "http://it-dashboard.shvenergy.corp",
+        "https://10.31.1.80",
         ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
     ],
     session: {

@@ -81,7 +81,7 @@ export function LoginForm({
                   id="username"
                   name="username"
                   type="text"
-                  placeholder="mark.salamon ali mark.salamon@butanplin.si"
+                  placeholder="ime.priimek"
                   autoComplete="username"
                   required
                   disabled={loading}
