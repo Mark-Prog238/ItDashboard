@@ -52,7 +52,7 @@ export function NavMain({
           return (
             <Collapsible
               key={`${item.title}-${isItemActive}`}
-              defaultOpen={isItemActive}
+              defaultOpen={true}
               render={<SidebarMenuItem />}
             >
               <SidebarMenuButton
