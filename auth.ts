@@ -78,6 +78,12 @@ export const ldapPlugin = (): BetterAuthPlugin => ({
 
 export const auth = betterAuth({
     database: dashboardDB,
+    secret: process.env.BETTER_AUTH_SECRET || "3cKPnnBhClSvbh0bhuqQVCXc7ajk78NV",
+    trustedOrigins: [
+        "http://localhost:3000",
+        "http://10.31.1.80:3000",
+        ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
+    ],
     session: {
         expiresIn: 60 * 60 * 24 * 30, // 30 dni veljavnosti
         updateAge: 60 * 60 * 24, // Osveži vsakih 24 ur aktivnosti (sliding session)
