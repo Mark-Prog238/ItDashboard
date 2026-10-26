@@ -47,17 +47,22 @@ const data = {
           title: "POS Units",
           icon: <Users/>,
           url: "/mobilepos/devices",
+          target: "",
           active: true,
         },
         {
           title: "Operators",
           icon: <Terminal/>,
           url: "/mobilepos/users",
+          target: "",
+
         },
         {
           title: "Settings",
           icon: <Settings/>,
           url: "#",
+          target: "",
+
         },
       ],
     },
@@ -72,6 +77,7 @@ const data = {
         {
           title: "pfSense Firewall",
           url: "https://10.31.230.4/",
+          target: "_blank",
           icon: (
               <Shield/>
           ),
@@ -79,6 +85,7 @@ const data = {
         {
           title: "Endpoint Central",
           url: "https://siljswdeploy:8383/",
+          target: "_blank",
           icon: (
               <Laptop/>
           ),
@@ -86,6 +93,7 @@ const data = {
         {
           title: "Zabbix Monitoring",
           url: "https://zabbix.butanplin.si/",
+          target: "_blank",
           icon: (
               <Activity
               />
@@ -94,6 +102,7 @@ const data = {
         {
           title: "N8N Workflows",
           url: "http://10.31.1.80:5678/home/workflows",
+          target: "_blank",
           icon: (
               <Workflow
               />
@@ -102,10 +111,11 @@ const data = {
       ],
     },
   ],
-  navSecondary: [
+/*  navSecondary: [
     {
       title: "N8N Workflows",
       url: "http://10.31.1.80:5678/home/workflows",
+      target: "_blank",
       icon: (
           <FrameIcon
           />
@@ -113,7 +123,8 @@ const data = {
     },
     {
       title: "Zabbix monitoring",
-      url: "#",
+      url: "http://zabbix.butanplin.si",
+      target: "_blank",
       icon: (
           <PieChartIcon
           />
@@ -129,23 +140,7 @@ const data = {
         />
       ),
     },
-    {
-      name: "Zabbix",
-      url: "#",
-      icon: (
-        <PieChartIcon
-        />
-      ),
-    },
-    {
-      name: "Travel",
-      url: "https://zabbix.butanplin.si/",
-      icon: (
-        <MapIcon
-        />
-      ),
-    },
-  ],
+  ],*/
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (

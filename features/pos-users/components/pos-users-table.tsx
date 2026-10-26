@@ -57,7 +57,6 @@ export default function UsersTable({ data }: { data: Users[] }) {
                     value={table.state.globalFilter ?? ''}
                     onChange={(value) => table.setGlobalFilter(String(value))}
                     placeholder="Search all columns..."
-                    className="h-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
                 />
             </div>
 
@@ -212,7 +211,6 @@ function DebouncedInput({
     value: string | number
     onChange: (value: string | number) => void
     debounce?: number
-    className?: string // 2. Add it to the types
 } & Omit<React.ComponentProps<typeof Input>, 'onChange'>) {
     const [value, setValue] = React.useState(initialValue)
 
@@ -226,7 +224,7 @@ function DebouncedInput({
         <Input
             {...props}
             value={value}
-            className={className} // 3. Pass it explicitly to Shadcn Input
+            className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
             onChange={(e) => {
                 setValue(e.target.value)
                 debouncedOnChange(e.target.value)

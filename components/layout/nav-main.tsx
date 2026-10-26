@@ -33,6 +33,7 @@ export function NavMain({
     items?: {
       title: string
       url: string
+      target: string
       icon: React.ReactNode
     }[]
   }[]
@@ -83,7 +84,7 @@ export function NavMain({
                             <SidebarMenuSubButton
                               isActive={isActive}
                               aria-current={isActive ? "page" : undefined}
-                              render={<a href={subItem.url} />}
+                              render={<a href={subItem.url} target={subItem.target} />}
                             >
                               {subItem.icon}
                               <span>{subItem.title}</span>

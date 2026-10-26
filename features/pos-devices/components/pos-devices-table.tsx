@@ -51,13 +51,12 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
     // 7. Render your table markup from the table instance APIs.
     return (
         <div className="p-4">
-            <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input bg-transparent px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
+            <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
                 <Search className="size-4 shrink-0 text-muted-foreground" />
                 <DebouncedInput
                     value={table.state.globalFilter ?? ''}
                     onChange={(value) => table.setGlobalFilter(String(value))}
                     placeholder="Search all columns..."
-                    className="h-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
                 />
             </div>
 
@@ -206,7 +205,6 @@ function DebouncedInput({
                             value: initialValue,
                             onChange,
                             debounce = 300,
-                            className, // 1. Explicitly extract className here
                             ...props
                         }: {
     value: string | number
@@ -226,7 +224,7 @@ function DebouncedInput({
         <Input
             {...props}
             value={value}
-            className={className} // 3. Pass it explicitly to Shadcn Input
+            className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
             onChange={(e) => {
                 setValue(e.target.value)
                 debouncedOnChange(e.target.value)
