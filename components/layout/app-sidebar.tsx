@@ -14,10 +14,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {
-  FrameIcon,
-  PieChartIcon,
-  MapIcon,
   TerminalIcon,
+  Calendar,
   Terminal,
   Settings,
   Users,
@@ -63,6 +61,24 @@ const data = {
           url: "#",
           target: "",
 
+        },
+      ],
+    },
+    {
+      title: "Administration",
+      url: "#",
+      icon: (
+          <Shield
+          />
+      ),
+      items: [
+        {
+          title: "Koledar Odsotnosti",
+          url: "/calendar",
+          target: "_blank",
+          icon: (
+              <Calendar/>
+          ),
         },
       ],
     },

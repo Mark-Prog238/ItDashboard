@@ -5,6 +5,7 @@ export interface LdapUser {
     username: string;
     displayName: string;
     email: string;
+    groups: string[]
 }
 
 // Dovoljeni znaki v sAMAccountName (prepreči LDAP injection)
@@ -54,15 +55,29 @@ export async function verifyLdapCredentials(
         const { searchEntries } = await client.search(baseDn, {
             scope: "sub",
             filter: `(&(objectClass=user)(sAMAccountName=${escapeLdapFilter(username)}))`,
-            attributes: ["displayName", "mail", "userPrincipalName"],
+            attributes: ["displayName", "mail", "userPrincipalName", "memberOf"],
             sizeLimit: 1,
         });
 
         const entry = searchEntries[0];
+        let rawGroups: string[] = [];
+
+        if (entry?.memberOf) {
+            rawGroups = Array.isArray(entry.memberOf)
+                ? (entry.memberOf as string[])
+                : [entry.memberOf as string];
+        }
+        // 3. Izlušči samo čisto ime skupine (iz "CN=IT_Admins,OU=Groups,DC=..." vzamemo "IT_Admins")
+        const groups = rawGroups.map((dn) => {
+            const match = dn.match(/^CN=([^,]+)/i);
+            return match ? match[1] : dn;
+        });
+
         return {
             username,
             displayName: (entry?.displayName as string) || username,
             email: (entry?.mail as string) || (entry?.userPrincipalName as string) || `${username}@butanplin.si`,
+            groups, // 👈 vrnemo npr. ["IT_Admins", "Domain Users", "MobilePOS_Managers"]
         };
     } catch (error) {
         console.error("LDAP napaka pri prijavi:", error);
@@ -71,3 +86,5 @@ export async function verifyLdapCredentials(
         await client.unbind().catch(() => {});
     }
 }
+
+// TODO add checks for users group to see if he is authorized to view pages and if

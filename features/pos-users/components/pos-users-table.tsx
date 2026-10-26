@@ -42,21 +42,26 @@ export default function UsersTable({ data }: { data: Users[] }) {
         {
             debugTable: false,
             features,
-            columns: columns as any,
+            columns: columns,
             data,
             globalFilterFn: 'includesString',
         },
         (state) => state, // default selector
     )
+    const onSearchChange = useDebouncedCallback(
+        (val: string) => table.setGlobalFilter(val),
+        { wait: 300 }
+    );
     // 7. Render your table markup from the table instance APIs.
     return (
         <div className="p-4">
-            <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input bg-transparent px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
+            <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
                 <Search className="size-4 shrink-0 text-muted-foreground" />
-                <DebouncedInput
-                    value={table.state.globalFilter ?? ''}
-                    onChange={(value) => table.setGlobalFilter(String(value))}
+                <Input
+                    defaultValue={table.state.globalFilter ?? ""}
+                    onChange={(e) => onSearchChange(e.target.value)}
                     placeholder="Search all columns..."
+                    className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
                 />
             </div>
 
@@ -135,7 +140,7 @@ export default function UsersTable({ data }: { data: Users[] }) {
                             value={`${table.state.pagination.pageSize}`}
                             onValueChange={(value) => table.setPageSize(Number(value))}
                         >
-                            <SelectTrigger size="sm" className="w-[70px]">
+                            <SelectTrigger size="sm" className="w-17.5">
                                 <SelectValue
                                     placeholder={`${table.state.pagination.pageSize}`}
                                 />
@@ -199,36 +204,5 @@ export default function UsersTable({ data }: { data: Users[] }) {
                 </div>
             </div>
         </div>
-    )
-}
-function DebouncedInput({
-                            value: initialValue,
-                            onChange,
-                            debounce = 300,
-                            className, // 1. Explicitly extract className here
-                            ...props
-                        }: {
-    value: string | number
-    onChange: (value: string | number) => void
-    debounce?: number
-} & Omit<React.ComponentProps<typeof Input>, 'onChange'>) {
-    const [value, setValue] = React.useState(initialValue)
-
-    React.useEffect(() => {
-        setValue(initialValue)
-    }, [initialValue])
-
-    const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
-
-    return (
-        <Input
-            {...props}
-            value={value}
-            className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
-            onChange={(e) => {
-                setValue(e.target.value)
-                debouncedOnChange(e.target.value)
-            }}
-        />
     )
 }
