@@ -1,8 +1,0 @@
-https://dashboard.butanplin.si, https://10.31.1.80 {
-    tls /etc/caddy/certs/cert.crt /etc/caddy/certs/cert.key
-    reverse_proxy server:3000
-}
-
-http://dashboard.butanplin.si, http://10.31.1.80 {
-    redir https://dashboard.butanplin.si{uri} permanent
-}

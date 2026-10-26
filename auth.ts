@@ -1,9 +1,9 @@
 import { betterAuth, type BetterAuthPlugin } from "better-auth";
-import { dashboardDB } from "@/lib/pg_db";
+import { dashboardDB} from "@/lib/db/pg-pool";
 import { createAuthEndpoint, APIError } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
-import { verifyLdapCredentials } from "@/lib/ldap";
+import { verifyLdapCredentials} from "@/features/auth/ldap";
 
 export const ldapPlugin = (): BetterAuthPlugin => ({
     id: "ldap",
