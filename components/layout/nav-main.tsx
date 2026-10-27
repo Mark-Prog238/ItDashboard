@@ -60,7 +60,7 @@ export function NavMain({
                 tooltip={item.title}
                 isActive={isItemActive}
                 aria-current={isPathActive(pathname, item.url) ? "page" : undefined}
-                render={<a href={item.url} />}
+                render={<CollapsibleTrigger />}
               >
                 {item.icon}
                 <span>{item.title}</span>

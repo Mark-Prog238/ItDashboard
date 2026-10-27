@@ -1,5 +1,6 @@
 import { Client } from "ldapts";
 import { readFileSync } from "node:fs";
+import {updateUserGroups} from "@/features/auth/queries/auth-queries";
 
 export interface LdapUser {
     username: string;

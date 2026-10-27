@@ -16,22 +16,22 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import type { ComponentProps } from "react";
 
 export function LoginForm({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: ComponentProps<"div">) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const router = useRouter()
+  const handleSubmit = async (form: FormData) => {
     setError(null);
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const username = (formData.get("username") as string)?.trim();
-    const password = formData.get("password") as string;
+    const username = (form.get("username") as string)?.trim();
+    const password = form.get("password") as string;
 
     try {
       const response = await fetch("/api/auth/sign-in/ldap", {
@@ -51,7 +51,7 @@ export function LoginForm({
       }
 
       // Uspešna prijava - seja je varno shranjena v HTTP-only piškotku
-      window.location.href = "/dashboard/mobilepos/devices";
+      router.replace("/mobilepos/devices")
     } catch (error) {
       console.log(error)
       setError("Napaka pri povezavi s strežnikom.");
@@ -69,7 +69,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form action={handleSubmit}>
             <FieldGroup>
               {error && (
                 <div className="p-3 text-sm font-medium rounded-md bg-destructive/15 text-destructive border border-destructive/20 text-center">

@@ -21,11 +21,15 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+import {redirect} from "next/navigation";
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const signOut = async () => {
-    await authClient.signOut();
+    const status = await authClient.signOut();
+    if (status) {
+      redirect("/")
+    }
   }
   const {data: session, isPending} =authClient.useSession()
   if (isPending) return <div>Loading...</div>

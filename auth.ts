@@ -4,6 +4,7 @@ import { createAuthEndpoint, APIError } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
 import { verifyLdapCredentials} from "@/features/auth/ldap";
+import {updateUserGroups} from "@/features/auth/queries/auth-queries";
 
 export const ldapPlugin = (): BetterAuthPlugin => ({
     id: "ldap",
@@ -52,7 +53,8 @@ export const ldapPlugin = (): BetterAuthPlugin => ({
                         message: "Napaka pri ustvarjanju uporabniškega računa.",
                     });
                 }
-
+                // insertamo userjeve grupe v bazo
+                await updateUserGroups(user.id, ldapUser.groups);
                 // 2. Ustvari sejo v bazi (privzeto 30 dni)
                 const session = await ctx.context.internalAdapter.createSession(user.id);
                 if (!session) {

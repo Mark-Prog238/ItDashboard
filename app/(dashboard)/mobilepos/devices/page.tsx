@@ -4,6 +4,7 @@ import DeviceTable from "@/features/pos-devices/components/pos-devices-table";
 import { allDevicesData, allDevicesCount, onlineDevicesCount} from "@/features/pos-devices/queries/valkire-device-queries";
 import { Smartphone, CheckCircle2, AlertCircle } from "lucide-react";
 
+
 // 1. Child async component performs the data fetching inside the <Suspense> boundary
 async function DevicesDashboard() {
     const [allDevices, all, online] = await Promise.all([

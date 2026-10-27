@@ -7,12 +7,12 @@ export async function proxy(request: NextRequest) {
     });
 
     if (!session) {
-        return NextResponse.redirect(new URL("/signin", request.url));
+        return NextResponse.redirect(new URL("/", request.url));
     }
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*"],
+    matcher: ["/mobilepos/:path*"],
 };
