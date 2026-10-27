@@ -2,9 +2,10 @@ import {createColumnHelper} from "@tanstack/react-table";
 import {features} from "@/lib/table-features";
 import {Devices} from "../types"
 import {Button} from "@/components/ui/button";
-import {Pencil} from "lucide-react";
+import {Pencil, Activity} from "lucide-react";
 import * as React from "react";
 import {TableCheckbox} from "@/lib/table-features";
+import {pingDevice} from "@/features/pos-devices/functions/pos-devices-functions";
 export const columnHelper = createColumnHelper<typeof features, Devices>()
 
 // 1. Remove columnHelper.columns() and just use a standard array
@@ -73,6 +74,30 @@ export const columns = columnHelper.columns([
             }).format(new Date(rawDate));
         }
     }),
+    // PING button
+    columnHelper.display({
+        id: "ping",
+        header: () =><span className="sr-only">Ping</span>,
+        cell: ({ row }) => {
+            const device = row.original;
+
+            return (
+                <div className="flex items-center justify-end">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-8 text-muted-foreground hover:text-foreground"
+                        onClick={() => {pingDevice(device.PosCurrentIPV4)}}
+                    >
+                        <Activity className="size-4" />
+                        <span className="sr-only">Ping {device.PosCurrentIPV4}</span>
+                    </Button>
+                </div>
+            );
+        },
+        enableSorting: false,
+    }),
+
     // 2. ACTIONS / EDIT (PEN) STOLPEC
     columnHelper.display({
         id: "actions",
