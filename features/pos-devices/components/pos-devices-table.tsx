@@ -2,7 +2,7 @@
 import * as React from 'react'
 import {useTable} from '@tanstack/react-table'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
-import {features} from "@/lib/table-features";
+import {features,exportToCsv} from "@/lib/table-features";
 import {columns} from "./pos-devices-table-columns";
 import {Devices} from "../types"
 import {
@@ -14,6 +14,7 @@ import {
     ChevronsLeft,
     ChevronsRight,
     Search,
+    Sheet,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -32,11 +33,8 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-
-
 // maybe make the table a type so we can only have one table and when we call it we just insert the data
 export default function DeviceTable({ data }: { data: Devices[] }) {
-
     const table = useTable(
         {
             debugTable: false,
@@ -51,17 +49,22 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
         (val: string) => table.setGlobalFilter(val),
         { wait: 300 }
     );
-    // 7. Render your table markup from the table instance APIs.
     return (
         <div className="p-4">
-            <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
-                <Search className="size-4 shrink-0 text-muted-foreground" />
-                <Input
-                    defaultValue={table.state.globalFilter ?? ""}
-                    onChange={(e) => onSearchChange(e.target.value)}
-                    placeholder="Search all columns..."
-                    className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
-                />
+            <div className="justify-between flex">
+                <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
+                    <Search className="size-4 shrink-0 text-muted-foreground" />
+                    <Input
+                        defaultValue={table.state.globalFilter ?? ""}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        placeholder="Search all columns..."
+                        className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
+                    />
+                </div>
+                <Button onClick={() => exportToCsv(table, "pos-naprave.csv")}>
+                    <Sheet className="size-4" />
+                    <p>Export To Excel</p>
+                </Button>
             </div>
             {/*//TODO make pagnation footer a component so we can reuse it not write it multiple times*/}
             <div className="rounded-md border">
@@ -137,12 +140,12 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                             value={`${table.state.pagination.pageSize}`}
                             onValueChange={(value) => table.setPageSize(Number(value))}
                         >
-                            <SelectTrigger size="sm" className="w-[70px]">
+                            <SelectTrigger size="sm" className="w-17.5">
                                 <SelectValue
                                     placeholder={`${table.state.pagination.pageSize}`}
                                 />
                             </SelectTrigger>
-                            <SelectContent side="top">
+                            <SelectContent side="top" >
                                 {[ 10, 20, 30, 40, 50].map((pageSize) => (
                                     <SelectItem key={pageSize} value={`${pageSize}`}>
                                         {pageSize}
@@ -152,7 +155,7 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                             </SelectContent>
                         </Select>
                     </div>
-                    <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                    <div className="flex w-25 items-center justify-center text-sm font-medium">
                         Page {table.state.pagination.pageIndex + 1} of{' '}
                         {Math.max(1, table.getPageCount())}
                     </div>

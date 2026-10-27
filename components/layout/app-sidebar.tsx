@@ -43,14 +43,14 @@ const data = {
       items: [
         {
           title: "POS Units",
-          icon: <Users/>,
+          icon: <Terminal/>,
           url: "/mobilepos/devices",
           target: "",
           active: true,
         },
         {
           title: "Operators",
-          icon: <Terminal/>,
+          icon: <Users/>,
           url: "/mobilepos/users",
           target: "",
 

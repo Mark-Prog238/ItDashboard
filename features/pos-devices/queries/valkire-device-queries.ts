@@ -1,12 +1,12 @@
 import { getDbPool} from "@/lib/db/mssql-pool";
 import { connection } from "next/server";
 import {Devices} from "../types";
-
+// D A T A
 export const allDevicesData = async (): Promise<Devices[]> => {
     await connection(); // MUST be outside try/catch
     try {
         const pool = await getDbPool();
-        const result = await pool.request().query("SELECT * FROM ValkirePosUnit");
+        const result = await pool.request().query("SELECT * FROM ValkirePosUnit ORDER BY PosConnectStartLast DESC");
         return (result.recordset as Devices[]) ?? [];
     } catch (error) {
         console.error("Database error in AllDevicesData:", error);
@@ -14,28 +14,10 @@ export const allDevicesData = async (): Promise<Devices[]> => {
     }
 };
 
-export const ipFilteredDevices = async (): Promise<Devices[]> => {
-    await connection(); // MUST be outside try/catch
-    try {
-        const pool = await getDbPool();
-        const result = await pool.request().query(`
-            SELECT 
-                ValkirePosUnitID, 
-                Vehicle, 
-                PosCurrentIPV4, 
-                FiscBusinessPremiseID, 
-                FiscElectronicDeviceID,
-                PosConnectStartLast
-            FROM ValkirePosUnit 
-            WHERE PosCurrentIPV4 IS NOT NULL AND PosCurrentIPV4 <> ''
-        `);
-        return (result.recordset as Devices[]) ?? [];
-    } catch (error) {
-        console.error("Database error in IpFilteredDevices:", error);
-        return [];
-    }
-};
 
+
+
+// C O U N T
 export const allDevicesCount = async (): Promise<number> => {
     await connection(); // MUST be outside try/catch
     try {
@@ -63,3 +45,4 @@ export const onlineDevicesCount = async (): Promise<number> => {
         return 0;
     }
 };
+

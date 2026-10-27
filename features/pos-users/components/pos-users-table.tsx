@@ -4,7 +4,7 @@ import {useTable} from '@tanstack/react-table'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {columns} from "./pos-users-table-columns";
 import {Users} from "../types"
-import {features} from "@/lib/table-features";
+import {exportToCsv, features} from "@/lib/table-features";
 import {
     ArrowDown,
     ArrowUp,
@@ -13,7 +13,7 @@ import {
     ChevronRight,
     ChevronsLeft,
     ChevronsRight,
-    Search,
+    Search, Sheet,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -55,14 +55,20 @@ export default function UsersTable({ data }: { data: Users[] }) {
     // 7. Render your table markup from the table instance APIs.
     return (
         <div className="p-4">
-            <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
-                <Search className="size-4 shrink-0 text-muted-foreground" />
-                <Input
-                    defaultValue={table.state.globalFilter ?? ""}
-                    onChange={(e) => onSearchChange(e.target.value)}
-                    placeholder="Search all columns..."
-                    className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
-                />
+            <div className="justify-between flex">
+                <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
+                    <Search className="size-4 shrink-0 text-muted-foreground" />
+                    <Input
+                        defaultValue={table.state.globalFilter ?? ""}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        placeholder="Search all columns..."
+                        className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
+                    />
+                </div>
+                <Button onClick={() => exportToCsv(table, "pos-users.csv")}>
+                    <Sheet className="size-4" />
+                    <p>Export To Excel</p>
+                </Button>
             </div>
 
             <div className="rounded-md border">
@@ -155,7 +161,7 @@ export default function UsersTable({ data }: { data: Users[] }) {
                             </SelectContent>
                         </Select>
                     </div>
-                    <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                    <div className="flex w-25 items-center justify-center text-sm font-medium">
                         Page {table.state.pagination.pageIndex + 1} of{' '}
                         {Math.max(1, table.getPageCount())}
                     </div>
