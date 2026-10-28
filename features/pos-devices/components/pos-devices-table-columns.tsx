@@ -6,6 +6,10 @@ import {Pencil, Activity} from "lucide-react";
 import * as React from "react";
 import {TableCheckbox} from "@/lib/table-features";
 import {pingDevice} from "@/features/pos-devices/functions/pos-devices-functions";
+
+
+
+
 export const columnHelper = createColumnHelper<typeof features, Devices>()
 
 // 1. Remove columnHelper.columns() and just use a standard array
@@ -87,8 +91,7 @@ export const columns = columnHelper.columns([
                         variant="ghost"
                         size="icon"
                         className="size-8 text-muted-foreground hover:text-foreground"
-                        onClick={() => {pingDevice(device.PosCurrentIPV4)}}
-                    >
+                       onClick={() => {pingDevice(device.PosCurrentIPV4)}}>
                         <Activity className="size-4" />
                         <span className="sr-only">Ping {device.PosCurrentIPV4}</span>
                     </Button>

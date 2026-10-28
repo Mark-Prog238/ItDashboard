@@ -1,7 +1,7 @@
 // lib/pingVnc.ts
 import net from 'net';
 import {checkHostVncStatus} from "@/app/actions/checkVnc";
-
+import {pingDeviceStatusToast} from "@/app/actions/toasts";
 export interface TcpPingResult {
     host: string;
     port: number;
@@ -62,15 +62,13 @@ export function pingVncPort(
 }
 
 export const pingDevice = async (ip: string) => {
-    console.log('Checking...');
     const res = await checkHostVncStatus(ip, 5900);
     if (res.online) {
-        //TODO DODAMO RETURN
-        return "Online"
-        //console.log(`Online (${res.latencyMs}ms) ${res.banner ? `- ${res.banner}` : ''}`);
+        const msg = `Čas odziva: ${res.latencyMs}ms`
+        pingDeviceStatusToast(ip, "ONLINE", msg)
     } else {
-        //TODO DODAMO RETURN
-        return "Offline"
-        //console.log(`Offline (${res.error})`);
+        const msg = `OFLINE (${res.error})`
+        pingDeviceStatusToast(ip, "OFLINE", msg)
     }
 }
+
