@@ -95,7 +95,7 @@ export const auth = betterAuth({
         updateAge: 60 * 60 * 24, // Osveži vsakih 24 ur aktivnosti (sliding session)
     },
     emailAndPassword: {
-        enabled: true,
+        enabled: false,
     },
     plugins: [ldapPlugin()],
 });

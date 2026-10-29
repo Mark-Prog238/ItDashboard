@@ -5,7 +5,6 @@ import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {features,exportToCsv} from "@/lib/table-features";
 import {columns} from "./pos-devices-table-columns";
 import {Devices} from "../types"
-import {checkHostVncStatus} from "@/app/actions/checkVnc";
 import {
     ArrowDown,
     ArrowUp,
@@ -34,6 +33,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
+import PosDevicesEditRowForm from "./pos-devices-edit-row-form";
 // maybe make the table a type so we can only have one table and when we call it we just insert the data
 export default function DeviceTable({ data }: { data: Devices[] }) {
     const table = useTable(
@@ -50,8 +50,10 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
         (val: string) => table.setGlobalFilter(val),
         { wait: 300 }
     );
+
     return (
         <div className="p-4">
+            <PosDevicesEditRowForm />
             <div className="justify-between flex">
                 <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
                     <Search className="size-4 shrink-0 text-muted-foreground" />

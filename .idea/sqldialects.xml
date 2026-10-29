@@ -2,5 +2,6 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/features/auth/queries/auth-queries.ts" dialect="Cockroach" />
+    <file url="file://$PROJECT_DIR$/features/pos-devices/queries/valkire-device-queries.ts" dialect="GenericSQL" />
   </component>
 </project>

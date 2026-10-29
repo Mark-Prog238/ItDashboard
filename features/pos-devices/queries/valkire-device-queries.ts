@@ -13,7 +13,33 @@ export const allDevicesData = async (): Promise<Devices[]> => {
         return [];
     }
 };
-
+/*ValkirePosUnitID: selectedDevice?.ValkirePosUnitID ?? "",
+    Vehicle: String(form.get("vehicle") ?? ""),
+    FiscBusinessPremiseID: String(form.get("FiscBusinessPremiseID") ?? ""),
+    FiscElectronicDeviceID: String(form.get("FiscElectronicDeviceID") ?? ""),*/
+// U P D A T E    V A L U E S
+export const updateDeviceData = async (data: Partial<Devices>) => {
+    await connection();
+    try {
+        const pool = await getDbPool();
+        const result = await pool
+            .request()
+            .input("id", data.ValkirePosUnitID)
+            .input("reg", data.Vehicle)
+            .input("premiseId", data.FiscBusinessPremiseID)
+            .input("deviceId", data.FiscElectronicDeviceID)
+            .query(`UPDATE ValkirePosUnit
+            SET 
+                Vehicle = @reg,
+                FiscBusinessPremiseID = @premiseId,
+                FiscElectronicDeviceID = @deviceId
+            WHERE ValkirePosUnitID = @id`)
+        return result
+    } catch(error) {
+        console.error("Database error in updateDeviceData:", error);
+        return error;
+    }
+}
 
 
 

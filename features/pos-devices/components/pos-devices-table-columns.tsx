@@ -5,12 +5,11 @@ import {Button} from "@/components/ui/button";
 import {Pencil, Activity} from "lucide-react";
 import * as React from "react";
 import {TableCheckbox} from "@/lib/table-features";
-import {pingDevice} from "@/features/pos-devices/functions/pos-devices-functions";
+import {pingDevice} from "@/features/pos-devices/functions/pos-devices-functions-pingVnc";
+import {useDeviceDialog} from "@/features/pos-devices/stores/use-device-dialog";
 
 
-
-
-export const columnHelper = createColumnHelper<typeof features, Devices>()
+const columnHelper = createColumnHelper<typeof features, Devices>()
 
 // 1. Remove columnHelper.columns() and just use a standard array
 export const columns = columnHelper.columns([
@@ -27,7 +26,7 @@ export const columns = columnHelper.columns([
                 />
             </div>
         ),
-        // TODO kle mamo pa select in bo opcija export torej pokluku bos kere rabs pol mas pa export to excel in ti zlouda excel ali pa csv file
+
         cell: ({ row }) => (
             <div className="flex items-center justify-center px-1">
                 <TableCheckbox
@@ -91,7 +90,7 @@ export const columns = columnHelper.columns([
                         variant="ghost"
                         size="icon"
                         className="size-8 text-muted-foreground hover:text-foreground"
-                       onClick={() => {pingDevice(device.PosCurrentIPV4)}}>
+                       onClick={() => {pingDevice(device.PosCurrentIPV4 as string)}}>
                         <Activity className="size-4" />
                         <span className="sr-only">Ping {device.PosCurrentIPV4}</span>
                     </Button>
@@ -105,7 +104,7 @@ export const columns = columnHelper.columns([
     columnHelper.display({
         id: "actions",
         header: () => <span className="sr-only">Actions</span>,
-        cell: ({ row }) => {
+        cell: ({ row, table }) => {
             const device = row.original;
 
             return (
@@ -114,12 +113,7 @@ export const columns = columnHelper.columns([
                         variant="ghost"
                         size="icon"
                         className="size-8 text-muted-foreground hover:text-foreground"
-                        onClick={() => {
-                            console.log("Urejanje devica:", device);
-                            // TODO naredi sql query ki cala po user.ValkirePosUserID in odpre formo potem jo pa fila z podatki ko editas ce das submit da uppert v db (update if changed)
-
-                        }}
-                    >
+                        onClick={() => useDeviceDialog.getState().openEdit(device)}>
                         <Pencil className="size-4" />
                         <span className="sr-only">Uredi {device.ValkirePosUnitID}</span>
                     </Button>
