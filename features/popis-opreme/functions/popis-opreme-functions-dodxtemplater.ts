@@ -63,20 +63,25 @@ function formatVrstaName(type: string): string {
 }
 
 // Find LibreOffice / soffice executable across Windows, Linux (Docker), macOS
-function findSofficeExecutable(): string {
+function getSofficeCandidates(): string[] {
     if (process.env.LIBREOFFICE_PATH) {
-        return process.env.LIBREOFFICE_PATH;
+        return [process.env.LIBREOFFICE_PATH];
     }
     if (process.platform === "win32") {
-        return "C:\\Program Files\\LibreOffice\\program\\soffice.exe";
+        return [
+            "C:\\Program Files\\LibreOffice\\program\\soffice.exe",
+            "C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe",
+            "soffice.exe",
+            "libreoffice.exe",
+        ];
     }
-    // Linux / Docker
-    return "soffice";
+    // Linux / Docker container
+    return ["libreoffice", "soffice", "/usr/bin/libreoffice", "/usr/bin/soffice"];
 }
 
 // Convert DOCX Buffer to PDF Buffer via LibreOffice headless
 async function convertDocxToPdfWithLibreOffice(docxBuffer: Buffer): Promise<Buffer> {
-    const sofficePath = findSofficeExecutable();
+    const candidates = getSofficeCandidates();
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "libreoffice-"));
     const tempDocx = path.join(tempDir, "document.docx");
     const tempPdf = path.join(tempDir, "document.pdf");
@@ -84,26 +89,42 @@ async function convertDocxToPdfWithLibreOffice(docxBuffer: Buffer): Promise<Buff
     try {
         await fs.writeFile(tempDocx, docxBuffer);
 
-        await execFileAsync(sofficePath, [
-            "--headless",
-            "--convert-to",
-            "pdf",
-            "--outdir",
-            tempDir,
-            tempDocx,
-        ]);
+        let converted = false;
+        let lastError: any = null;
+
+        for (const bin of candidates) {
+            try {
+                await execFileAsync(bin, [
+                    "--headless",
+                    "--convert-to",
+                    "pdf",
+                    "--outdir",
+                    tempDir,
+                    tempDocx,
+                ]);
+                converted = true;
+                break;
+            } catch (err: any) {
+                lastError = err;
+                if (err?.code !== "ENOENT") {
+                    // Executable exists but failed to convert
+                    break;
+                }
+            }
+        }
+
+        if (!converted) {
+            if (lastError?.code === "ENOENT") {
+                throw new Error(
+                    "LibreOffice (libreoffice/soffice) ni bil najden v sistemu. " +
+                    "V Dockerju se prepričajte, da je v teku namestitev 'libreoffice-writer' in pisav."
+                );
+            }
+            throw new Error(`Napaka pri pretvorbi z LibreOffice: ${lastError?.message || lastError}`);
+        }
 
         const pdfBuffer = await fs.readFile(tempPdf);
         return pdfBuffer;
-    } catch (err: any) {
-        if (err?.code === "ENOENT") {
-            throw new Error(
-                "LibreOffice (soffice) ni bil najden v sistemu. " +
-                "Za lokalni razvoj namestite LibreOffice (npr. 'winget install TheDocumentFoundation.LibreOffice'), " +
-                "v Dockerju pa poskrbite za namestitev paketa 'libreoffice-writer'."
-            );
-        }
-        throw new Error(`Napaka pri pretvorbi z LibreOffice: ${err?.message || err}`);
     } finally {
         // Clean up temporary directory and files
         await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});

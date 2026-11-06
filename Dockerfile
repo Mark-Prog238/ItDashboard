@@ -16,6 +16,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Install LibreOffice and fonts in the production runner container
+RUN apk add --no-cache \
+    libreoffice-writer \
+    fontconfig \
+    ttf-liberation \
+    ttf-dejavu
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./

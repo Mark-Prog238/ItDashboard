@@ -158,37 +158,6 @@ export default function PrimopredajaCard() {
                         <RotateCcw className="h-3.5 w-3.5" />
                         Ponastavi
                     </Button>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownloadAction("docx")}
-                        disabled={downloadingFormat !== null}
-                        className="text-xs h-9 gap-1.5 shadow-xs"
-                    >
-                        {downloadingFormat === "docx" ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                            <FileDown className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-                        )}
-                        DOCX
-                    </Button>
-                    <Button
-                        type="button"
-                        size="sm"
-                        onClick={() => handleDownloadAction("pdf")}
-                        disabled={downloadingFormat !== null}
-                        className="text-xs h-9 gap-1.5 shadow-xs min-w-[160px]"
-                    >
-                        {downloadingFormat === "pdf" ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : downloadSuccess ? (
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" />
-                        ) : (
-                            <FileText className="h-3.5 w-3.5 text-red-300" />
-                        )}
-                        Prenesi PDF
-                    </Button>
                 </div>
             </div>
 
@@ -388,14 +357,6 @@ export default function PrimopredajaCard() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handleReset}
-                            className="text-xs h-9"
-                        >
-                            Počisti
-                        </Button>
                         <Button
                             type="button"
                             variant="outline"
