@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ["mssql", "tedious", "@azure/identity", "pg", "ldapts"],
 
   experimental: {
     agentFeedback: true,
