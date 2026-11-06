@@ -18,7 +18,12 @@ interface PrimopredajaDatePickerProps {
 }
 
 export function PrimopredajaDatePicker({ date: propDate, setDate: propSetDate }: PrimopredajaDatePickerProps) {
-    const [internalDate, setInternalDate] = React.useState<Date | undefined>(new Date());
+    const [internalDate, setInternalDate] = React.useState<Date | undefined>(undefined);
+
+    React.useEffect(() => {
+        setInternalDate(new Date());
+    }, []);
+
     const currentDate = propDate !== undefined ? propDate : internalDate;
     const handleSelect = propSetDate || setInternalDate;
 

@@ -1,7 +1,6 @@
 "use server";
 
 import fs from "fs/promises";
-import fsSync from "fs";
 import path from "path";
 import os from "os";
 import { execFile } from "child_process";
@@ -65,16 +64,11 @@ function formatVrstaName(type: string): string {
 
 // Find LibreOffice / soffice executable across Windows, Linux (Docker), macOS
 function findSofficeExecutable(): string {
+    if (process.env.LIBREOFFICE_PATH) {
+        return process.env.LIBREOFFICE_PATH;
+    }
     if (process.platform === "win32") {
-        const winPaths = [
-            "C:\\Program Files\\LibreOffice\\program\\soffice.exe",
-            "C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe",
-            path.join(process.env.LOCALAPPDATA || "", "Programs", "LibreOffice", "program", "soffice.exe"),
-        ];
-        for (const p of winPaths) {
-            if (fsSync.existsSync(p)) return p;
-        }
-        return "soffice.exe";
+        return "C:\\Program Files\\LibreOffice\\program\\soffice.exe";
     }
     // Linux / Docker
     return "soffice";
