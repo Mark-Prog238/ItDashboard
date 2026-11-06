@@ -15,6 +15,7 @@ import {
     ChevronsRight,
     Search,
     Sheet,
+    CirclePlus,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -64,10 +65,16 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                         className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
                     />
                 </div>
+                <div>
                 <Button onClick={() => exportToCsv(table, "pos-naprave.csv")}>
                     <Sheet className="size-4" />
-                    <p>Export To Excel</p>
+                    <p >Export To Excel</p>
                 </Button>
+                <Button variant="default" onClick={() => exportToCsv(table, "pos-naprave.csv")}>
+                    <CirclePlus className="size-4" />
+                    <p className="text-sm">Add new device</p>
+                </Button>
+                </div>
             </div>
             {/*//TODO make pagnation footer a component so we can reuse it not write it multiple times*/}
             <div className="rounded-md border">

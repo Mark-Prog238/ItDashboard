@@ -1,7 +1,6 @@
 "use client"
 // TODO add BP logo menu add toggle theme button
 import * as React from "react"
-
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 import {
@@ -24,8 +23,10 @@ import {
   Shield,
   Tablet,
   Laptop,
-  Activity
+  Activity,
+  FileText
 } from "lucide-react"
+
 const data = {
   user: {
     name: "shadcn",
@@ -80,6 +81,14 @@ const data = {
               <Calendar/>
           ),
         },
+        {
+          title: "Primopredaja",
+          url: "/primopredaja",
+          target: "",
+          icon: (
+              <FileText/>
+          ),
+        },
       ],
     },
     {
@@ -92,7 +101,7 @@ const data = {
       items: [
         {
           title: "pfSense Firewall",
-          url: "https://10.31.230.4/",
+          url: "https://pfsense.butanplin.si/",
           target: "_blank",
           icon: (
               <Shield/>
@@ -100,7 +109,7 @@ const data = {
         },
         {
           title: "Endpoint Central",
-          url: "https://siljswdeploy:8383/",
+          url: "https://endpointcentral.butanplin.si/",
           target: "_blank",
           icon: (
               <Laptop/>
@@ -117,7 +126,7 @@ const data = {
         },
         {
           title: "N8N Workflows",
-          url: "http://10.31.1.80:5678/home/workflows",
+          url: "https://n8n.butanplin.si",
           target: "_blank",
           icon: (
               <Workflow
@@ -158,6 +167,8 @@ const data = {
     },
   ],*/
 }
+
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
