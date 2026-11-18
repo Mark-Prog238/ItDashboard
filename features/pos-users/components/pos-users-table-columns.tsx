@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import * as React from "react";
 import { Pencil } from "lucide-react";
 import {TableCheckbox} from "@/lib/table-features";
+import {CopyButton, CopyButtonIcon} from "@animate-ui/react/primitives/buttons/copy";
+import {copyToClipboard} from "@/features/actions/actions-copy";
 
 // 1. Remove columnHelper.columns() and just use a standard array
 export const columns = columnHelper.columns([
@@ -38,22 +40,47 @@ export const columns = columnHelper.columns([
     }),
     columnHelper.accessor('ValkirePosUserID', {
         header: 'USER ID',
+        cell: ({row}) =>{
+            const users = row.original
+            const val = users.ValkirePosUserID as string
+            return (copyToClipboard(val))
+        }
     }),
 
     columnHelper.accessor('FirstName', {
         header: 'First Name',
+        cell: ({row}) =>{
+            const users = row.original
+            const val = users.FirstName as string
+            return (copyToClipboard(val))
+        }
     }),
 
     columnHelper.accessor('LastName', {
         header: 'Last Name',
+        cell: ({row}) =>{
+            const users = row.original
+            const val = users.LastName as string
+            return (copyToClipboard(val))
+        }
     }),
 
     columnHelper.accessor('Username', {
         header: 'Username',
+        cell: ({row}) =>{
+            const users = row.original
+            const val = users.Username as string
+            return (copyToClipboard(val))
+        }
     }),
 
     columnHelper.accessor('VAT', {
         header: 'VAT',
+        cell: ({row}) =>{
+            const users = row.original
+            const val = users.VAT as string
+            return (copyToClipboard(val))
+        }
     }),
     // 2. ACTIONS / EDIT (PEN) STOLPEC
     columnHelper.display({

@@ -9,21 +9,10 @@ import {
     ArrowDown,
     ArrowUp,
     ArrowUpDown,
-    ChevronLeft,
-    ChevronRight,
-    ChevronsLeft,
-    ChevronsRight,
     Search, Sheet,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
 import {
     Table,
     TableBody,
@@ -32,6 +21,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
+import {TablePaginationFooter} from "@/features/tables/table-footer";
 
 
 
@@ -70,10 +60,9 @@ export default function UsersTable({ data }: { data: Users[] }) {
                     <p>Export To Excel</p>
                 </Button>
             </div>
-
-            <div className="rounded-md border">
+            <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="bg-muted/40">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
@@ -86,19 +75,23 @@ export default function UsersTable({ data }: { data: Users[] }) {
                                                 : ArrowUpDown
 
                                     return (
-                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                        <TableHead
+                                            key={header.id}
+                                            colSpan={header.colSpan}
+                                            className="px-4 text-xs font-medium text-muted-foreground"
+                                        >
                                             {header.isPlaceholder ? null : header.column.getCanSort() ? (
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="-ml-3 h-8 data-[state=open]:bg-accent"
+                                                    className="-ml-3 h-8 text-xs font-medium text-muted-foreground hover:text-foreground data-[state=open]:bg-accent"
                                                     onClick={header.column.getToggleSortingHandler()}
                                                 >
                                                     <table.FlexRender header={header} />
-                                                    <Icon className="ml-2" />
+                                                    <Icon className="ml-1.5 size-3.5 text-muted-foreground" />
                                                 </Button>
                                             ) : (
-                                                <span className="text-sm font-medium">
+                                                <span className="text-xs font-medium">
                           <table.FlexRender header={header} />
                         </span>
                                             )}
@@ -113,16 +106,16 @@ export default function UsersTable({ data }: { data: Users[] }) {
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-24 text-center"
+                                    className="h-24 text-center text-muted-foreground"
                                 >
                                     No results.
                                 </TableCell>
                             </TableRow>
                         ) : (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id}>
+                                <TableRow key={row.id} className="hover:bg-muted/40">
                                     {row.getAllCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} className="px-4 py-2.5">
                                             <table.FlexRender cell={cell} />
                                         </TableCell>
                                     ))}
@@ -132,83 +125,7 @@ export default function UsersTable({ data }: { data: Users[] }) {
                     </TableBody>
                 </Table>
             </div>
-
-            {/* Pagination controls */}
-            <div className="flex items-center justify-between gap-4 px-2 py-4">
-                <div className="text-sm text-muted-foreground">
-                    {table.getPrePaginatedRowModel().rows.length.toLocaleString()} of{' '}
-                    {data.length.toLocaleString()} rows
-                </div>
-                <div className="flex items-center gap-6 lg:gap-8">
-                    <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium">Rows per page</p>
-                        <Select
-                            value={`${table.state.pagination.pageSize}`}
-                            onValueChange={(value) => table.setPageSize(Number(value))}
-                        >
-                            <SelectTrigger size="sm" className="w-17.5">
-                                <SelectValue
-                                    placeholder={`${table.state.pagination.pageSize}`}
-                                />
-                            </SelectTrigger>
-                            <SelectContent side="top">
-                                {[ 10, 20, 30, 40, 50].map((pageSize) => (
-                                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                                        {pageSize}
-                                    </SelectItem>
-                                ))}
-                                <SelectItem value="Infinity">All</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="flex w-25 items-center justify-center text-sm font-medium">
-                        Page {table.state.pagination.pageIndex + 1} of{' '}
-                        {Math.max(1, table.getPageCount())}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="hidden size-8 lg:flex"
-                            onClick={() => table.firstPage()}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            <span className="sr-only">Go to first page</span>
-                            <ChevronsLeft />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="size-8"
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            <span className="sr-only">Go to previous page</span>
-                            <ChevronLeft />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="size-8"
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                        >
-                            <span className="sr-only">Go to next page</span>
-                            <ChevronRight />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="hidden size-8 lg:flex"
-                            onClick={() => table.lastPage()}
-                            disabled={!table.getCanLastPage()}
-                        >
-                            <span className="sr-only">Go to last page</span>
-                            <ChevronsRight />
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            <TablePaginationFooter table={table} />
         </div>
     )
 }

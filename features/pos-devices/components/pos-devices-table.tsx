@@ -9,23 +9,12 @@ import {
     ArrowDown,
     ArrowUp,
     ArrowUpDown,
-    ChevronLeft,
-    ChevronRight,
-    ChevronsLeft,
-    ChevronsRight,
     Search,
     Sheet,
     CirclePlus,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
 import {
     Table,
     TableBody,
@@ -35,6 +24,7 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import PosDevicesEditRowForm from "./pos-devices-edit-row-form";
+import {TablePaginationFooter} from "@/features/tables/table-footer";
 // maybe make the table a type so we can only have one table and when we call it we just insert the data
 export default function DeviceTable({ data }: { data: Devices[] }) {
     const table = useTable(
@@ -53,33 +43,41 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
     );
 
     return (
-        <div className="p-4">
+        <div className="space-y-4">
             <PosDevicesEditRowForm />
-            <div className="justify-between flex">
-                <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-full border border-input px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex h-9 w-full max-w-sm items-center gap-2 rounded-md border border-input bg-background px-3 shadow-xs focus-within:ring-1 focus-within:ring-ring">
                     <Search className="size-4 shrink-0 text-muted-foreground" />
                     <Input
                         defaultValue={table.state.globalFilter ?? ""}
                         onChange={(e) => onSearchChange(e.target.value)}
                         placeholder="Search all columns..."
-                        className="bg-transparent h-full border-0 p-0 shadow-none focus-visible:ring-0 dark:bg-input-none"
+                        className="h-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
                     />
                 </div>
-                <div>
-                <Button onClick={() => exportToCsv(table, "pos-naprave.csv")}>
-                    <Sheet className="size-4" />
-                    <p >Export To Excel</p>
-                </Button>
-                <Button variant="default" onClick={() => exportToCsv(table, "pos-naprave.csv")}>
-                    <CirclePlus className="size-4" />
-                    <p className="text-sm">Add new device</p>
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => exportToCsv(table, "pos-naprave.csv")}
+                    >
+                        <Sheet />
+                        <span>Export</span>
+                    </Button>
+                    <Button
+                        variant="default"
+                        size="lg"
+                        /*onClick={}*/
+                    >
+                        <CirclePlus />
+                        <span>Add new device</span>
+                    </Button>
                 </div>
             </div>
             {/*//TODO make pagnation footer a component so we can reuse it not write it multiple times*/}
-            <div className="rounded-md border">
+            <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="bg-muted/40">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
@@ -92,19 +90,23 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                                                 : ArrowUpDown
 
                                     return (
-                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                        <TableHead
+                                            key={header.id}
+                                            colSpan={header.colSpan}
+                                            className="px-4 text-xs font-medium text-muted-foreground"
+                                        >
                                             {header.isPlaceholder ? null : header.column.getCanSort() ? (
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="-ml-3 h-8 data-[state=open]:bg-accent"
+                                                    className="-ml-3 h-8 text-xs font-medium text-muted-foreground hover:text-foreground data-[state=open]:bg-accent"
                                                     onClick={header.column.getToggleSortingHandler()}
                                                 >
                                                     <table.FlexRender header={header} />
-                                                    <Icon className="ml-2" />
+                                                    <Icon className="ml-1.5 size-3.5 text-muted-foreground" />
                                                 </Button>
                                             ) : (
-                                                <span className="text-sm font-medium">
+                                                <span className="text-xs font-medium">
                           <table.FlexRender header={header} />
                         </span>
                                             )}
@@ -119,16 +121,16 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-24 text-center"
+                                    className="h-24 text-center text-muted-foreground"
                                 >
                                     No results.
                                 </TableCell>
                             </TableRow>
                         ) : (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id}>
+                                <TableRow key={row.id} className="hover:bg-muted/40">
                                     {row.getAllCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} className="px-4 py-2.5">
                                             <table.FlexRender cell={cell} />
                                         </TableCell>
                                     ))}
@@ -138,81 +140,7 @@ export default function DeviceTable({ data }: { data: Devices[] }) {
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-between gap-4 px-2 py-4">
-                <div className="text-sm text-muted-foreground">
-                    {table.getPrePaginatedRowModel().rows.length.toLocaleString()} of{' '}
-                    {data.length.toLocaleString()} rows
-                </div>
-                <div className="flex items-center gap-6 lg:gap-8">
-                    <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium">Rows per page</p>
-                        <Select
-                            value={`${table.state.pagination.pageSize}`}
-                            onValueChange={(value) => table.setPageSize(Number(value))}
-                        >
-                            <SelectTrigger size="sm" className="w-17.5">
-                                <SelectValue
-                                    placeholder={`${table.state.pagination.pageSize}`}
-                                />
-                            </SelectTrigger>
-                            <SelectContent side="top" >
-                                {[ 10, 20, 30, 40, 50].map((pageSize) => (
-                                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                                        {pageSize}
-                                    </SelectItem>
-                                ))}
-                                <SelectItem value="Infinity">All</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="flex w-25 items-center justify-center text-sm font-medium">
-                        Page {table.state.pagination.pageIndex + 1} of{' '}
-                        {Math.max(1, table.getPageCount())}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="hidden size-8 lg:flex"
-                            onClick={() => table.firstPage()}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            <span className="sr-only">Go to first page</span>
-                            <ChevronsLeft />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="size-8"
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            <span className="sr-only">Go to previous page</span>
-                            <ChevronLeft />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="size-8"
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                        >
-                            <span className="sr-only">Go to next page</span>
-                            <ChevronRight />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="hidden size-8 lg:flex"
-                            onClick={() => table.lastPage()}
-                            disabled={!table.getCanLastPage()}
-                        >
-                            <span className="sr-only">Go to last page</span>
-                            <ChevronsRight />
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            <TablePaginationFooter table={table} />
         </div>
     )
 }

@@ -2,11 +2,16 @@ import {createColumnHelper} from "@tanstack/react-table";
 import {features} from "@/lib/table-features";
 import {Devices} from "../types"
 import {Button} from "@/components/ui/button";
-import {Pencil, Activity} from "lucide-react";
+import {Pencil, Activity } from "lucide-react";
 import * as React from "react";
 import {TableCheckbox} from "@/lib/table-features";
 import {pingDevice} from "@/features/pos-devices/functions/pos-devices-functions-pingVnc";
 import {useDeviceDialog} from "@/features/pos-devices/stores/use-device-dialog";
+import {
+    CopyButton,
+    CopyButtonIcon
+} from '@animate-ui/react/primitives/buttons/copy';
+import {copyToClipboard} from "@/features/actions/actions-copy";
 
 
 const columnHelper = createColumnHelper<typeof features, Devices>()
@@ -42,22 +47,47 @@ export const columns = columnHelper.columns([
     }),
     columnHelper.accessor('ValkirePosUnitID', {
         header: 'ValkirePosUnitID',
+        cell: ({row}) =>{
+            const device = row.original
+            const val = device.ValkirePosUnitID as string
+            return (copyToClipboard(val))
+        }
     }),
 
     columnHelper.accessor('Vehicle', {
         header: 'Vehicle',
+        cell: ({row}) =>{
+            const device = row.original
+            const val = device.Vehicle as string
+            return (copyToClipboard(val))
+        }
     }),
-
+    // dodamo coppy function
     columnHelper.accessor('PosCurrentIPV4', {
         header: 'PosCurrentIPV4',
+        cell: ({row}) =>{
+            const device = row.original
+            const val = device.PosCurrentIPV4 as string
+            return (copyToClipboard(val))
+        }
     }),
 
     columnHelper.accessor('FiscBusinessPremiseID', {
         header: 'FiscBusinessPremiseID',
+        cell: ({row}) =>{
+            const device = row.original
+            const val = device.FiscBusinessPremiseID as string
+            return (copyToClipboard(val))
+        }
     }),
 
     columnHelper.accessor('FiscElectronicDeviceID', {
         header: 'FiscElectronicDeviceID',
+        cell: ({row}) =>{
+            const device = row.original
+            const val = device.FiscElectronicDeviceID as string
+            return (copyToClipboard(val))
+        }
     }),
     columnHelper.accessor('PosConnectStartLast', {
         header: 'Last Connection',
@@ -68,13 +98,15 @@ export const columns = columnHelper.columns([
             if (!rawDate) return "N/A";
 
             // Formats to: 26. 09. 2018, 18:41 (Standard European/Slovenian format)
-            return new Intl.DateTimeFormat('sl-SI', {
+            const dateTime = new Intl.DateTimeFormat('sl-SI', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
             }).format(new Date(rawDate));
+            const val = dateTime as string
+            return (copyToClipboard(val))
         }
     }),
     // PING button
